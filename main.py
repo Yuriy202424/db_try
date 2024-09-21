@@ -48,6 +48,9 @@ class RioFitnessClubVisitor(Base):
     __tablename__ = "visitors"
     number : Mapped[str]
     name : Mapped[str]
+    bought_date : Mapped[datetime]
+    expiring_date : Mapped[str]
+    is_human : Mapped[bool]
 
 Base.metadata.create_all(engine)
 Session = sessionmaker(engine)
@@ -59,8 +62,16 @@ else:
     print("Error")
     raise ValueError("False number")
 name = input("Input name: ")
+bought_date = datetime.now()
+expiring_date = bought_date.replace(year=bought_date.year+1)
+sex = input("Input your sex \n Male or Female: ")
+if sex == "Male":
+    is_human = True
+else:
+    is_human = False
 
-print(name, number)
+
+print(name, number, bought_date, expiring_date, is_human)
 with Session.begin() as session:
-    event = RioFitnessClubVisitor(number=number, name=name)
+    event = RioFitnessClubVisitor(number=number, name=name, bought_date=bought_date, expiring_date=expiring_date, is_human=is_human)
     session.add(event)
